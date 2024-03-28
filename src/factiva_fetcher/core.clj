@@ -1,5 +1,6 @@
 (ns factiva-fetcher.core
   (:require [factiva-fetcher.parser :as parser]
+            [factiva-fetcher.client :as client]
             [factiva-fetcher.writer :as writer])
   (:gen-class))
 
@@ -12,7 +13,6 @@
   ;; (go-loop []
   ;;   (recur))
   )
-
 
 
 ;; (defn create-writer
