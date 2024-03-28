@@ -1,15 +1,17 @@
 (ns factiva-fetcher.core
+  (:require [factiva-fetcher.parser :as parser]
+            [factiva-fetcher.writer :as writer])
   (:gen-class))
 
 (defn -main
   "I don't do a whole lot ... yet."
-  [& [company-id]]
+  [& args]
+  (let [{:keys [type directory] :as options} (parser/parse-arguments args)
+        writer (writer/create-writer directory)]
+    )
   ;; (go-loop []
   ;;   (recur))
   )
-
-;; (defn -fetch-company
-;;   [])
 
 
 
@@ -18,9 +20,6 @@
 ;;   [{:keys [filename body]}]
 ;;   (println filename body))
 
-(defn create-writer
-  []
-  (fn [{:keys [filename body]}]
-    (println body)))
+
 
 
