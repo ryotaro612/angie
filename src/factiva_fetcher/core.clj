@@ -16,7 +16,7 @@
                                (cond (= type :company) {:company-id argument}
                                      (= type :keyword) {:query argument}
                                      :else (System/exit 1)))
-        news-meta-ch (async/chan)
+        news-meta-ch (async/chan 5)
         news-ch (async/chan 10 news/xf)]
     
     (retrieval/find-news-meta (fn [params fetched-news-ch error-ch]

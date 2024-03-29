@@ -11,11 +11,12 @@
 
 (defn get-news
   [{:keys [id] :as meta} ch err-ch]
-  
+  (println "get: " id)
   (http/get (str "http://10.101.18.65/v1/articles/" id)
             {:headers {"host" "legacy.news-api.ub-speeda.lan"}
-             :timeout 2000}
+             :timeout 10000}
             (fn [{:keys [status headers body error] :as response}]
+              (println "done: " id)
               (if (= status 200)
                 (async/>!! ch {:meta meta
                                :news (json/read-str body :key-fn keyword)})
@@ -27,10 +28,11 @@
   (let [option (cond company-id {:company-id company-id}
                      query {:query query}
                      :else {})]
+    (println "offset: " offset)
     (http/get (str (or base-url "http://10.101.18.65") "/v2/news")
             {:headers {"x-speeda-client-industry-id" 110
                        "host" (or host "legacy.news-api.ub-speeda.lan")}
-             :timeout 2000
+             :timeout 10000
              :query-params (merge option
                                   {:limit limit
                                    :offset offset
@@ -39,6 +41,7 @@
                                    :to to})}
             
             (fn [{:keys [status headers body error] :as response}]
+              (println "done offset: " offset)              
               (if (= status 200)
                 (async/>!! ch {:request request
                                :response (json/read-str body :key-fn keyword)})
