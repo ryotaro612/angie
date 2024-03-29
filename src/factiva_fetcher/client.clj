@@ -10,8 +10,18 @@
   (jt/format "yyyy-MM-dd'T'HH:mm:ss.SSSX" zoned-date-time))
 
 (defn get-news
+  [news-id ch err-ch]
+  (http/get (str "http://10.101.18.65/v1/articles/" news-id)
+            {:headers {"host" (or host "legacy.news-api.ub-speeda.lan")}}
+            (fn [{:keys [status headers body error] :as response}]
+              (if (= status 200)
+                (async/go (async/>! ch {:news-id news-id
+                                        :news (json/read-str body :key-fn keyword)}))
+                (async/go (async/>! err-ch {:status status :response response}))))))
+
+(defn find-news
   "from and to should be java.time.ZonedDateTime objects."
-  [base-url host channel error-channel {:keys [company-id query from to offset limit] :as request}]
+  [base-url host {:keys [company-id query from to offset limit] :as request} channel error-channel]
   (let [option (cond company-id {:company-id company-id}
                      query {:query query}
                      :else {})]
@@ -22,8 +32,8 @@
                                   {:limit limit
                                    :offset offset
                                    :language "en"
-                                   :from (coerce-to-datetime-str from)
-                                   :to (coerce-to-datetime-str to)})}
+                                   :from from
+                                   :to to})}
             
             (fn [{:keys [status headers body error] :as response}]
               (if (= status 200)

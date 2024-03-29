@@ -7,6 +7,7 @@
                  [http-kit "2.3.0"]
                  [org.clojure/data.json "2.5.0"]
                  [org.clojure/core.async "1.6.681"]
+                 [org.clojure/data.csv "1.1.0"]
                  [clojure.java-time "1.4.2"]]
   :main ^:skip-aot factiva-fetcher.core
   :target-path "target/%s"

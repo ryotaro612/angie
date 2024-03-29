@@ -2,7 +2,7 @@
 
 (defn parse-arguments
   "Parse the arguments of the main function."
-  [[type argument directory]]
-  (if (and (and type argument directory)
+  [[type argument filename]]
+  (if (and (and type argument filename)
            (contains? #{"company" "keyword"} type))
-    {:type (keyword type) :argument argument :directory directory}))
+    {:type (keyword type) :argument argument :filename filename}))
