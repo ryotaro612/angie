@@ -10,10 +10,9 @@
 (defn start-writer
   [ch writer]
   (async/go-loop []
-    (if-let [{:keys [id title body release-date] :as article} (async/<! ch)]
+    (if-let [record (async/<! ch)]
       (do
-        (println article)
-        (csv/write-csv writer [[id release-date title body]])
+        (csv/write-csv writer [record])
         (recur)))))
 
 

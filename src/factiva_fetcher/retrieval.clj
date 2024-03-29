@@ -3,30 +3,33 @@
             [clojure.core.async :as async]))
 
 
-(defn find-news-body
-  [get-news-body news-news-body-ch]
+(defn get-news
+  [fetch-news news-meta-ch news-ch]
+  (let [err-ch (async/chan)]
+    (async/go-loop []
+      (if-let [meta (async/<! news-meta-ch)]
+        (do
+          (fetch-news meta news-ch err-ch)
+          (recur))
+        (async/close! news-ch)))))
 
-  (async/go-loop []
-    (if-let [])
-    (recur))
-  )
 
-(defn find-news
+(defn find-news-meta
   "initial-option is a map with "
-  [fetch-news initial-options article-ch]
-  (let [fetched-news-ch (async/chan)
+  [find-news initial-options news-meta-ch]
+  (let [found-news-ch (async/chan)
         error-ch (async/chan)]
 
     (async/go-loop [{:keys [offset] :as options} initial-options]
-      (fetch-news options fetched-news-ch error-ch)
+      (find-news options found-news-ch error-ch)
 
-      (if-let [{{:keys [searchResults]} :response} (async/<! fetched-news-ch)]
+      (if-let [{{:keys [searchResults]} :response} (async/<! found-news-ch)]
         (let [num (count searchResults)]
           (if (= 0 num)
-            (async/close! article-ch)
+            (async/close! news-meta-ch)
             (do
-              (doseq [article searchResults]
-                (async/>! article-ch (assoc article :release-date (:releaseDate article))))
+              (doseq [result searchResults]
+                (async/>! news-meta-ch (assoc result :release-date (:releaseDate result))))
               (recur (assoc options :offset (+ offset num))))))))))
 ;; {
 ;;   "searchResults": [
