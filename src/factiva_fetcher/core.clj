@@ -20,7 +20,7 @@
         news-ch (async/chan 10 news/xf)]
     
     (retrieval/find-news-meta (fn [params fetched-news-ch error-ch]
-                                (client/find-news nil nil params fetched-news-ch error-ch))
+                                (client/find-news nil params fetched-news-ch error-ch))
                               initial-options
                               news-meta-ch)
 

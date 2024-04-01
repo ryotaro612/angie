@@ -9,6 +9,7 @@
 
 (defn start-writer
   [ch writer]
+  ;(csv/write-csv writer [["ID" "Release Date" "Title" "Body"]])
   (async/go-loop []
     (if-let [record (async/<! ch)]
       (do
