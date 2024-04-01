@@ -1,3 +1,6 @@
+# Fetched data
+*.csv
+# Clojure
 /target
 /classes
 /checkouts
