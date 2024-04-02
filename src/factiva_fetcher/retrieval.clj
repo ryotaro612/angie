@@ -1,9 +1,10 @@
 (ns factiva-fetcher.retrieval
   (:require [factiva-fetcher.client :as client]
+            [factiva-fetcher.news :as news]            
             [clojure.core.async :as async]))
 
 
-(defn get-news
+(defn- get-news
   [fetch-news news-meta-ch news-ch]
   (let [err-ch (async/chan)]
     (async/go-loop []
@@ -14,7 +15,7 @@
         (async/close! news-ch)))))
 
 
-(defn find-news-meta
+(defn- find-news-meta
   "initial-option is a map with "
   [find-news initial-options news-meta-ch]
   (let [found-news-ch (async/chan)
@@ -31,32 +32,12 @@
               (doseq [result searchResults]
                 (async/>! news-meta-ch (assoc result :release-date (:releaseDate result))))
               (recur (assoc options :offset (+ offset num))))))))))
-;; {
-;;   "searchResults": [
-;;     {
-;;       "id": "PROFDS0020240329ek410000b",
-;;       "title": "In Focus: Streamlight Wedge XT Flashlight",
-;;       "body": "Content brought to you by Professional Distributor. To subscribe, click here.\n\nApplication\nThe high-...",
-;;       "relations": {
-;;         "companies": [
-;;           "US9029733048"
-;;         ],
-;;         "industries": []
-;;       },
-;;       "hitText": " will be ready to illuminate a space when needed. <em>Red</em> and green indicator LEDs above the charge port",
-;;       "publicationDate": "2024-04-01T00:00:00.000Z",
-;;       "releaseDate": "2024-03-29T06:06:18.000Z",
-;;       "modificationDate": "2024-03-29T06:06:45.417Z",
-;;       "medium": {
-;;         "code": "PROFDS",
-;;         "name": "Professional Distributor",
-;;         "owner": false,
-;;         "downloadable": true,
-;;         "translated": false
-;;       },
-;;       "original": null,
-;;       "sourceUrl": null
-;;     }
-;;   ],
-;;   "hitCount": 84157
-;; }
+
+
+(defn retrieve
+  [find-meta find-news initial-options]
+  (let [news-meta-ch (async/chan 5)
+        news-ch (async/chan 10 news/xf)]
+    (find-news-meta find-meta initial-options news-meta-ch)
+    (get-news find-news news-meta-ch news-ch)
+    news-ch))

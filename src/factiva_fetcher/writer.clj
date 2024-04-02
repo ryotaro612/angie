@@ -7,7 +7,7 @@
   (map (fn [{:keys [id title body release-date]}]
          [id release-date title body])))
 
-(defn start-writer
+(defn- listen-record-ch
   [ch writer]
   ;(csv/write-csv writer [["ID" "Release Date" "Title" "Body"]])
   (async/go-loop []
@@ -17,13 +17,8 @@
         (recur)))))
 
 
-;; (with-open [writer (io/writer "/home/ryotaro/a.csv")]
-;;                           (let [ch (async/chan)
-;;                                 result-ch (start-writer ch writer)]
-;;                             (async/go
-;;                               (async/>! ch {:id "a" :title "doge" :body "body" :date "date"})
-;;                               (async/close! ch))
-;;                             (async/<!! result-ch)))
-                            
-
-                        
+(defn start-writer
+  [news-ch filename]
+  (with-open [writer (io/writer filename)]
+    (let [write-result-ch (listen-record-ch news-ch writer)]
+      (async/<!! write-result-ch))))
