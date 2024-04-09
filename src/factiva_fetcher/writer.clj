@@ -9,7 +9,7 @@
 
 (defn- listen-record-ch
   [ch writer]
-  ;(csv/write-csv writer [["ID" "Release Date" "Title" "Body"]])
+  (csv/write-csv writer [["ID" "Release Date" "Medium" "URL" "Title" "Body"]])
   (async/go-loop []
     (if-let [record (async/<! ch)]
       (do

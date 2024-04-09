@@ -30,7 +30,7 @@
             (async/close! news-meta-ch)
             (do
               (doseq [result searchResults]
-                (async/>! news-meta-ch (assoc result :release-date (:releaseDate result))))
+                (async/>! news-meta-ch (assoc result :release-date (:releaseDate result) :medium (-> result :medium :name))))
               (recur (assoc options :offset (+ offset num))))))))))
 
 

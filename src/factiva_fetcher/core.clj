@@ -20,9 +20,9 @@
                   writer (io/writer output)]
         (let [coll (csv/read-csv reader)]
           (csv/write-csv writer
-                         [["ID" "Release Date" "Title" "Body"]])
+                         [["ID" "Release Date" "Medium" "URL" "Title" "Body"]])
           (csv/write-csv writer
-                         (order/sort-by-release-date coll))))
+                         (order/sort-by-release-date (drop 1 coll)))))
 
       
       (let [initial-options (merge {:offset 0 :limit 100 :from "2023-11-01T00:00:00.000Z" :to "2024-04-01T00:00:00.000Z"}

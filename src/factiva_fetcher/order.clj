@@ -6,10 +6,12 @@
   [news-coll]
 
   (let [date-formatted (map
-                        (fn [[id release-date title body]]
+                        (fn [[id release-date medium url title body]]
                           [id
                            (jt/format "yyyy-MM-dd"
                                       (jt/zoned-date-time "yyyy-MM-dd'T'HH:mm:ss.SSSX" release-date))
+                           medium
+                           url
                            title
                            body])
                         news-coll)
