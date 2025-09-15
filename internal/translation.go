@@ -20,7 +20,7 @@ func MakeTranslationPrompt() mcp.Prompt {
 			&ja,
 		},
 		Description: "Translate Japanese to English",
-		Title:       "Translation Prompt",
+		Title:       "translation",
 	}
 
 	return prompt
