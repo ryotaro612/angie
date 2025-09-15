@@ -31,6 +31,7 @@ func main() {
 	})
 
 	prompt := internal.MakeTranslationPrompt()
+	logger.DebugContext(ctx, "adding prompt", "name", prompt.Name)
 	server.AddPrompt(&prompt, internal.MakeTranslationPromptHandler)
 
 	defer func() {
