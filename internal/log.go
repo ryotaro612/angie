@@ -3,15 +3,15 @@ package internal
 import (
 	"log/slog"
 	"os"
-
-	"log"
 )
 
-func NewStdOutLogger(level slog.Level) *log.Logger {
+func NewStdOutLogger(level slog.Level) *slog.Logger {
 	return newLogger(os.Stdout, level)
 }
 
-func newLogger(file *os.File, level slog.Level) *log.Logger {
-	h := slog.NewJSONHandler(file, nil)
-	return slog.NewLogLogger(h, level)
+func newLogger(file *os.File, level slog.Level) *slog.Logger {
+	h := slog.NewJSONHandler(file, &slog.HandlerOptions{
+		Level: level,
+	})
+	return slog.New(h)
 }
