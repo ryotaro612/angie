@@ -30,6 +30,9 @@ func main() {
 		HasTools:   true,
 	})
 
+	prompt := internal.MakeTranslationPrompt()
+	server.AddPrompt(&prompt, internal.MakeTranslationPromptHandler)
+
 	defer func() {
 		if err != nil {
 			logger.ErrorContext(ctx, "error", "err", err)
