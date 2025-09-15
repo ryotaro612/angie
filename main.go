@@ -10,8 +10,7 @@ import (
 )
 
 func main() {
-	if args, err := internal.Parse(os.Args[1:]); err != nil {
-		args.PrintHelp()
+	if _, err := internal.Parse(os.Args[1:]); err != nil {
 		os.Exit(1)
 		return
 	}
