@@ -10,6 +10,14 @@ import (
 )
 
 func main() {
+	if args, err := internal.Parse(os.Args[1:]); err != nil {
+		args.PrintHelp()
+		if args.Help {
+			os.Exit(1)
+		}
+		return
+	}
+
 	ctx := context.Background()
 	logger := internal.NewStdOutLogger(slog.LevelDebug)
 
