@@ -2,7 +2,6 @@ package internal
 
 import (
 	"flag"
-	"fmt"
 )
 
 type Cmd struct {
@@ -26,7 +25,5 @@ func Parse(args []string) (Cmd, error) {
 }
 
 func (c Cmd) PrintHelp() {
-	fmt.Println("start\n")
 	c.fs.PrintDefaults()
-	fmt.Println("end\n")
 }

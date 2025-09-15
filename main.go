@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log/slog"
 	"os"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -10,13 +9,17 @@ import (
 )
 
 func main() {
-	if _, err := internal.Parse(os.Args[1:]); err != nil {
+	var err error
+	cmd, err := internal.Parse(os.Args[1:])
+	if err != nil {
 		os.Exit(1)
 		return
+	} else if cmd.Help {
+		cmd.PrintHelp()
+		return
 	}
-
 	ctx := context.Background()
-	logger := internal.NewStdOutLogger(slog.LevelDebug)
+	logger := internal.NewStdOutLogger(cmd.Verbose)
 
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "angie",
@@ -26,8 +29,7 @@ func main() {
 		HasPrompts: true,
 		HasTools:   true,
 	})
-
-	var err error
+	server.AddPrompt()
 
 	defer func() {
 		if err != nil {
@@ -35,6 +37,8 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+
+	logger.DebugContext(ctx, "starting server")
 
 	// Run the server on the stdio transport.
 	if err = server.Run(ctx, &mcp.StdioTransport{}); err != nil {

@@ -5,7 +5,11 @@ import (
 	"os"
 )
 
-func NewStdOutLogger(level slog.Level) *slog.Logger {
+func NewStdOutLogger(verbose bool) *slog.Logger {
+	level := slog.LevelInfo
+	if verbose {
+		level = slog.LevelDebug
+	}
 	return newLogger(os.Stdout, level)
 }
 
