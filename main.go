@@ -12,6 +12,7 @@ import (
 
 func main() {
 	if args, err := internal.Parse(os.Args[1:]); err != nil {
+		fmt.Printf("ffff\n")
 		args.PrintHelp()
 		fmt.Printf("doooo\n")
 		if args.Help {
