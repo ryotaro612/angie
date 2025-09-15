@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -12,13 +11,8 @@ import (
 
 func main() {
 	if args, err := internal.Parse(os.Args[1:]); err != nil {
-		fmt.Printf("ffff\n")
 		args.PrintHelp()
-		fmt.Printf("doooo\n")
-		if args.Help {
-			os.Exit(1)
-		}
-		fmt.Printf("doooo2\n")
+		os.Exit(1)
 		return
 	}
 
