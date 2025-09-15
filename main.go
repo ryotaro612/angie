@@ -29,7 +29,6 @@ func main() {
 		HasPrompts: true,
 		HasTools:   true,
 	})
-	server.AddPrompt()
 
 	defer func() {
 		if err != nil {
